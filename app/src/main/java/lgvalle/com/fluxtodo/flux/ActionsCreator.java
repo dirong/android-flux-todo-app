@@ -1,6 +1,6 @@
-package lgvalle.com.fluxtodo.actions;
+package lgvalle.com.fluxtodo.flux;
 
-import lgvalle.com.fluxtodo.dispatcher.Dispatcher;
+import lgvalle.com.fluxtodo.actions.TodoActions;
 import lgvalle.com.fluxtodo.model.Todo;
 
 /**

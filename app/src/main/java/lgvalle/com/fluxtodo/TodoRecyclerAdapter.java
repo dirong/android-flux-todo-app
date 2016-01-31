@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import lgvalle.com.fluxtodo.actions.ActionsCreator;
+import lgvalle.com.fluxtodo.flux.ActionsCreator;
 import lgvalle.com.fluxtodo.model.Todo;
 
 /**
@@ -21,18 +21,18 @@ import lgvalle.com.fluxtodo.model.Todo;
  */
 public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapter.ViewHolder> {
 
-    private static ActionsCreator actionsCreator;
+    private ActionsCreator actionsCreator;
     private List<Todo> todos;
 
     public TodoRecyclerAdapter(ActionsCreator actionsCreator) {
         this.todos = new ArrayList<>();
-        TodoRecyclerAdapter.actionsCreator = actionsCreator;
+        this.actionsCreator = actionsCreator;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_row_layout, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, actionsCreator);
     }
 
     @Override
@@ -55,8 +55,11 @@ public class TodoRecyclerAdapter extends RecyclerView.Adapter<TodoRecyclerAdapte
         public CheckBox todoCheck;
         public Button todoDelete;
 
-        public ViewHolder(View v) {
+        private final ActionsCreator actionsCreator;
+
+        public ViewHolder(View v, ActionsCreator actionsCreator) {
             super(v);
+            this.actionsCreator = actionsCreator;
             todoText = (TextView) v.findViewById(R.id.row_text);
             todoCheck = (CheckBox) v.findViewById(R.id.row_checkbox);
             todoDelete = (Button) v.findViewById(R.id.row_delete);

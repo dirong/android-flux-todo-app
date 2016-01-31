@@ -1,39 +1,25 @@
-package lgvalle.com.fluxtodo.dispatcher;
-
-import com.squareup.otto.Bus;
+package lgvalle.com.fluxtodo.flux;
 
 import lgvalle.com.fluxtodo.actions.Action;
-import lgvalle.com.fluxtodo.stores.Store;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by lgvalle on 19/07/15.
  */
 public class Dispatcher {
-    private final Bus bus;
+    private final PublishSubject<Action> signalActions = PublishSubject.create();
     private static Dispatcher instance;
 
-    public static Dispatcher get(Bus bus) {
+    public static Dispatcher get() {
         if (instance == null) {
-            instance = new Dispatcher(bus);
+            instance = new Dispatcher();
         }
         return instance;
     }
 
-    Dispatcher(Bus bus) {
-        this.bus = bus;
-    }
-
-    public void register(final Object cls) {
-        bus.register(cls);
-
-    }
-
-    public void unregister(final Object cls) {
-        bus.unregister(cls);
-    }
-
-    public void emitChange(Store.StoreChangeEvent o) {
-        post(o);
+    Observable<Action> observeActions() {
+        return signalActions.asObservable();
     }
 
     public void dispatch(String type, Object... data) {
@@ -52,14 +38,10 @@ public class Dispatcher {
             Object value = data[i++];
             actionBuilder.bundle(key, value);
         }
-        post(actionBuilder.build());
+        signalActions.onNext(actionBuilder.build());
     }
 
     private boolean isEmpty(String type) {
         return type == null || type.isEmpty();
-    }
-
-    private void post(final Object event) {
-        bus.post(event);
     }
 }

@@ -1,7 +1,5 @@
 package lgvalle.com.fluxtodo.stores;
 
-import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -9,13 +7,15 @@ import java.util.List;
 
 import lgvalle.com.fluxtodo.actions.Action;
 import lgvalle.com.fluxtodo.actions.TodoActions;
-import lgvalle.com.fluxtodo.dispatcher.Dispatcher;
+import lgvalle.com.fluxtodo.flux.Dispatcher;
+import lgvalle.com.fluxtodo.flux.Store;
 import lgvalle.com.fluxtodo.model.Todo;
+import rx.Observable;
 
 /**
  * Created by lgvalle on 02/08/15.
  */
-public class TodoStore extends Store {
+public class TodoStore extends Store<TodoStore.TodoStoreChangeEvent> {
 
     private static TodoStore instance;
     private final List<Todo> todos;
@@ -44,8 +44,6 @@ public class TodoStore extends Store {
 
 
     @Override
-    @Subscribe
-    @SuppressWarnings("unchecked")
     public void onAction(Action action) {
         long id;
         switch (action.getType()) {
@@ -176,10 +174,10 @@ public class TodoStore extends Store {
     }
 
     @Override
-    StoreChangeEvent changeEvent() {
+    protected TodoStoreChangeEvent changeEvent() {
         return new TodoStoreChangeEvent();
     }
 
-    public class TodoStoreChangeEvent implements StoreChangeEvent {
+    public static class TodoStoreChangeEvent implements Store.StoreChangeEvent {
     }
 }
